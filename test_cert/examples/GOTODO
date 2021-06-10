@@ -1,0 +1,7 @@
+
+json:
+  - readonly, writeonly (in, out)
+  - map big.Int
+
+crypto
+  - RC2

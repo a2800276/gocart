@@ -1,0 +1,20 @@
+Some files used for testing.
+
+ca/123.pkcs8 : generated using:
+   openssl genrsa -des3 -out 123.keye -passout pass:testtest  4096
+   openssl pkcs8 -topk8 -in 123.keye -out 123.pkcs8 -nocrypt -passin pass:testtest
+
+ca/123.cert : generated using
+  openssl req -new -x509 -key 123.key -out 123.crt -days 3650 
+  -subj '/CN=Timbob Spongebrain Discount CA' -passin pass:testtest
+  -set_serial 123
+
+234.key : 
+  openssl genrsa -des3 -out 234.keye -passout pass:testtest  4096
+  openssl pkcs8 -topk8 -in 234.keye -out 234.pkcs8 -nocrypt -passin pass:testtest
+  openssl pkcs8 -topk8 -in 234.keye -out 234.pkcs8e -passin pass:testtest -passout pass:testtest
+
+234.crt : test certificate to import
+  openssl req -new -key 234.key -out 234.csr -passin pass:testtest -subj '/CN=Timbob Spongelabs'
+  openssl x509 -req -days 365 -in 234.csr -CA ca/123.crt -CAkey ca/123.key -set_serial 234 -out 234.crt -passin pass:testtest
+
