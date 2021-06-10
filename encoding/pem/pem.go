@@ -211,7 +211,7 @@ func LoadCertificateFromPEM(reader io.Reader) (*x509.Certificate, error) {
 	return nil, nil
 }
 
-func StorePEM(fn string, type_name string, bytes []byte) error {
+func StorePEM(fn string, type_name PemType, bytes []byte) error {
 	file, err := os.OpenFile(fn, os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		fmt.Printf("%s\n", err)
@@ -222,8 +222,8 @@ func StorePEM(fn string, type_name string, bytes []byte) error {
 	return WritePEM(file, type_name, bytes)
 }
 
-func WritePEM(writer io.Writer, type_name string, bytes []byte) error {
-	block := &pem.Block{type_name, nil, bytes}
+func WritePEM(writer io.Writer, type_name PemType, bytes []byte) error {
+	block := &pem.Block{string(type_name), nil, bytes}
 	if err := pem.Encode(writer, block); err != nil {
 		return err
 	}
