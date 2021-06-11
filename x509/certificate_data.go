@@ -74,7 +74,7 @@ type KeyUsage struct {
 	DecipherOnly      bool `json:"decipherOnly"`
 }
 
-func toKeyUsage(usage x509.KeyUsage) (ku KeyUsage) {
+func ToKeyUsage(usage x509.KeyUsage) (ku KeyUsage) {
 	ku.DigitalSignature = (usage & x509.KeyUsageDigitalSignature) != 0
 	ku.ContentCommitment = (usage & x509.KeyUsageContentCommitment) != 0
 	ku.KeyEncipherment = (usage & x509.KeyUsageKeyEncipherment) != 0
@@ -238,7 +238,7 @@ func CreateCertificate(ca_cert *x509.Certificate,
 		data.SubjectKeyId = GeneratePubKeyHash(key_to_sign)
 	}
 
-	template, err := data.createX509Template()
+	template, err := data.CreateX509Template()
 	if err != nil {
 		return nil, err
 	}
@@ -259,21 +259,48 @@ func CreateCertificate(ca_cert *x509.Certificate,
 
 // Turns flattened Certificate Data into x509.Certificate data to use
 // internally.
-func (data *CertificateData) createX509Template() (cert *x509.Certificate, err error) {
-	// GODOC:
-	//The following members of template are used:
-	// SerialNumber
-	// Subject,
-	// NotBefore,
-	// NotAfter,
-	// KeyUsage,
-	// BasicConstraintsValid,
-	// IsCA,
-	// MaxPathLen,
-	// SubjectKeyId,
-	// DNSNames,
-	// PermittedDNSDomainsCritical,
-	// PermittedDNSDomains. (godoc CreateCertificate(...))
+func (data *CertificateData) CreateX509Template() (cert *x509.Certificate, err error) {
+
+	// CreateCertificate creates a new X.509v3 certificate based on a template. The
+	// following members of template are used:
+	//
+	//      - AuthorityKeyId
+	//      - BasicConstraintsValid
+	//      - CRLDistributionPoints
+	//      - DNSNames
+	//      - EmailAddresses
+	//      - ExcludedDNSDomains
+	//      - ExcludedEmailAddresses
+	//      - ExcludedIPRanges
+	//      - ExcludedURIDomains
+	//      - ExtKeyUsage
+	//      - ExtraExtensions
+	//      - IPAddresses
+	//      - IsCA
+	//      - IssuingCertificateURL
+	//      - KeyUsage
+	//      - MaxPathLen
+	//      - MaxPathLenZero
+	//      - NotAfter
+	//      - NotBefore
+	//      - OCSPServer
+	//      - PermittedDNSDomains
+	//      - PermittedDNSDomainsCritical
+	//      - PermittedEmailAddresses
+	//      - PermittedIPRanges
+	//      - PermittedURIDomains
+	//      - PolicyIdentifiers
+	//      - SerialNumber
+	//      - SignatureAlgorithm
+	//      - Subject
+	//      - SubjectKeyId
+	//      - URIs
+	//      - UnknownExtKeyUsage
+	//
+	// The certificate is signed by parent. If parent is equal to template then the
+	// certificate is self-signed. The parameter pub is the public key of the signee
+	// and priv is the private key of the signer.
+
 	cert = new(x509.Certificate)
 	cert.SerialNumber, _ = data.SerialNumber.ToBigInt()
 	cert.Subject = data.Subject.ToX509PKIXName()
