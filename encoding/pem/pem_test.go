@@ -19,3 +19,12 @@ func TestLoadPemEnc(t *testing.T) {
 		t.Error("didn't load rsa pub keys", keys)
 	}
 }
+
+const some_certificate = "../../test_cert/123.crt"
+
+func TestLoadPemCertificate(t *testing.T) {
+	_, err := LoadPEMCertificate(some_certificate)
+	if err != nil {
+		t.Fatal(err)
+	}
+}

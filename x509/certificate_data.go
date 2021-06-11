@@ -214,6 +214,10 @@ func ToHex(i *big.Int) Hex {
 	return (Hex)(hex.EncodeToString(i.Bytes()))
 }
 
+func NewHex(bytes []byte) Hex {
+	return Hex(hex.EncodeToString(bytes))
+}
+
 // This would be nice, but not supported by go currently:
 // (to be more precise: of course it's supported, anonymous fields aren't
 // mapped to json.)
@@ -328,5 +332,5 @@ func (data *CertificateData) CreateX509Template() (cert *x509.Certificate, err e
 // in the stdlib
 func GeneratePubKeyHash(pubKey *rsa.PublicKey) Hex {
 	pubKeyHash := sha512.Sum512_256(pubKey.N.Bytes())
-	return Hex(hex.EncodeToString(pubKeyHash[:]))
+	return NewHex(pubKeyHash[:])
 }

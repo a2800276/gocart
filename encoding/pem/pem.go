@@ -75,6 +75,18 @@ func LoadPEMFile(fn string, credentials interface{}) (interface{}, error) {
 	return LoadPEM(f, credentials)
 }
 
+func LoadPEMCertificate(fn string) (*x509.Certificate, error) {
+	maybeCertificate, err := LoadPEMFile(fn, nil)
+	if err != nil {
+		return nil, err
+	}
+	if cert, ok := maybeCertificate.(*x509.Certificate); !ok {
+		return nil, fmt.Errorf("PEM: %s is not a certificate", fn)
+	} else {
+		return cert, nil
+	}
+}
+
 func LoadPEM(r io.Reader, credentials interface{}) (interface{}, error) {
 	bytes, err := ioutil.ReadAll(r)
 	if err != nil {
